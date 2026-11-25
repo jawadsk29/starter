@@ -37,9 +37,8 @@ def check_answer(user_answer: str, correct_answer: str) -> bool:
 
     Uses multiple strategies:
     1. Exact match (case-insensitive)
-    2. Substring match (user answer in correct answer)
-    3. Word-based match (all user words in correct answer)
-    4. Fuzzy similarity (50%+ match)
+    2. Word-based match (all user words in correct answer, min 2 chars)
+    3. Fuzzy similarity (50%+ match, min 2 chars)
     """
     import re
 
@@ -49,8 +48,9 @@ def check_answer(user_answer: str, correct_answer: str) -> bool:
     if user_clean == correct_clean:
         return True
 
-    if user_clean in correct_clean:
-        return True
+    min_length = 2
+    if len(user_clean) < min_length:
+        return False
 
     def extract_words(text):
         """Extract words, removing punctuation."""

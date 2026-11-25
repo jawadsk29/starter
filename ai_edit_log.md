@@ -130,6 +130,8 @@ Claude recommended a multi-strategy approach:
 
 **Recommendation**: Add minimum length threshold or word boundary validation for substring matches. Test with numeric decks specifically.
 
+**Post-Review Action**: After identifying the bug through systematic code review, the substring matching strategy was removed entirely (line 52 was deleted), and a minimum length threshold of 2 characters was added before word-based and fuzzy matching apply. This prevents single-character answers from incorrectly matching longer strings. The fix was verified with test cases: "1" no longer matches "12", and "2" no longer matches "2 + 2 = 4". All 64 existing tests continue to pass.
+
 ---
 
 ## Interaction 4: Quiz Modes and Adaptive Algorithm
@@ -170,7 +172,7 @@ Claude suggested:
 - **Correctness**: State machine logic correctly implements adaptive algorithm. ✓
 - **Logic**: First pass ordering, incorrect tracking, retry phase transition all correct. Override of `record_answer()` prevents double-queueing. ✓
 - **Edge cases**: Handles all-incorrect scenario (no retry). Empty deck handled by base class. ✓
-- **Testing**: Comprehensive tests for state transitions and edge cases. 100% coverage of adaptive mode logic. ✓
+- **Testing**: Comprehensive tests for state transitions and edge cases. Full coverage of adaptive mode logic. ✓
 
 ---
 
@@ -257,7 +259,7 @@ This iterative process ensured code quality while maintaining development speed.
 
 ## Code Quality Metrics
 
-- **Test Coverage:** 64 tests, 100% coverage of core logic
+- **Test Coverage:** 64 tests, 99% coverage
 - **Code Style:** All files pass `black`, `isort`, `flake8`, `mypy`
 - **Lines of Code:** ~400 lines of production code, ~300 lines of tests
 - **Time Investment:** Approximately 2-3 hours of focused development

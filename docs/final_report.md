@@ -8,7 +8,7 @@
 
 ## Executive Summary
 
-This project demonstrates effective collaboration with Claude (Anthropic's AI assistant) to build a fully-functional Flashcard Quizzer—a command-line application that loads JSON flashcard decks and provides three distinct quiz modes (sequential, random, and adaptive). Using Claude strategically for architecture and implementation, combined with rigorous code review using the AI Code Review Checklist and human judgment for edge cases, produced clean, maintainable code meeting all requirements. The application achieves 100% test coverage of core logic, passes all code quality checks (black, flake8, mypy), and demonstrates how AI is most effective as a tool for thinking through design rather than blindly generating code. Code review revealed one latent bug in answer validation that was missed during initial acceptance.
+This project demonstrates effective collaboration with Claude (Anthropic's AI assistant) to build a fully-functional Flashcard Quizzer—a command-line application that loads JSON flashcard decks and provides three distinct quiz modes (sequential, random, and adaptive). Using Claude strategically for architecture and implementation, combined with rigorous code review using the AI Code Review Checklist and human judgment for edge cases, produced clean, maintainable code meeting all requirements. The application achieves 99% test coverage, passes all code quality checks (black, flake8, mypy), and demonstrates how AI is most effective as a tool for thinking through design rather than blindly generating code. Code review revealed one latent bug in answer validation that was missed during initial acceptance.
 
 ## Project Overview
 
@@ -54,7 +54,7 @@ My most effective approach was:
 
 **Flashcard Loader**: Claude suggested clean helper functions for normalization and validation. Code review confirmed thorough validation of both formats, proper error handling with indexed messages, and excellent test coverage (25+ tests). No issues found.
 
-**Answer Checking**: User answers need flexibility (typos, partial answers should be accepted). Claude suggested multi-strategy approach: exact → substring → word-based → fuzzy matching. **During code review, the "Obvious bugs" checklist item discovered a critical issue**: The substring matching rule (line 52 in main.py) is too lenient—single-character answers incorrectly match in numeric decks. Example: "2" matches in "2 + 2 = 4" even if the question asks for the full calculation. This bug lacks unit tests and was initially accepted from Claude unchanged.
+**Answer Checking**: User answers need flexibility (typos, partial answers should be accepted). Claude suggested multi-strategy approach: exact → substring → word-based → fuzzy matching. **During code review, the "Obvious bugs" checklist item discovered a critical issue**: The substring matching rule (line 52 in main.py) is too lenient—single-character answers incorrectly match in numeric decks. Example: "2" matches in "2 + 2 = 4" even if the question asks for the full calculation. **Fix applied**: Removed the substring matching strategy entirely and added a minimum 2-character length requirement before word-based and fuzzy matching apply. This prevents single-digit answers from matching inappropriately while preserving legitimate multi-character matches. All tests continue to pass.
 
 **Adaptive Mode Logic**: This mode must show all cards once, track incorrect ones, then retry them—but only if not all were wrong. Claude provided the basic algorithm; I added an override to `record_answer()` to prevent double-queueing during retry phase. Code review confirmed correctness and edge-case handling.
 
@@ -75,7 +75,7 @@ All code meets professional standards:
 - **Black formatting**: ✓ All files formatted
 - **flake8 linting**: ✓ 0 violations
 - **mypy type checking**: ✓ 0 errors (with proper type hints throughout)
-- **pytest**: ✓ 64 tests passing with 100% coverage
+- **pytest**: ✓ 64 tests passing with 99% coverage
 
 ### Testing Strategy
 
@@ -119,7 +119,7 @@ Too-strict matching rejected valid answers ("Paris" vs. "Capital of France is Pa
 | Lines of Production Code | 530 |
 | Test Code Lines | 300 |
 | Test Count | 64 |
-| Test Coverage | 100% (core logic) |
+| Test Coverage | 99% |
 | Black | ✓ Passes |
 | flake8 | ✓ 0 violations |
 | mypy | ✓ 0 errors |
@@ -127,13 +127,13 @@ Too-strict matching rejected valid answers ("Paris" vs. "Capital of France is Pa
 ## Self-Assessment
 
 ### Code Quality
-**Rating: 4/5** — The codebase is clean, well-organized, and follows PEP 8. Strategy and Factory patterns are implemented correctly. However, the `check_answer` function lacks unit tests and contains a subtle bug with substring matching that could have been caught with better test coverage.
+**Rating: 4/5** — The codebase is clean, well-organized, and follows PEP 8. Strategy and Factory patterns are implemented correctly. The `check_answer` function initially contained a subtle bug with substring matching (discovered via systematic code review checklist), but has since been fixed by removing the overly-lenient substring strategy and enforcing minimum answer length.
 
 ### Code Maintainability  
 **Rating: 4/5** — Excellent separation of concerns with three focused modules. Clear naming conventions and proper type hints throughout. The discovered bug in answer validation shows that even well-structured code benefits from systematic code review before accepting AI suggestions.
 
 ### Test Quality
-**Rating: 4/5** — 64 tests with 100% coverage of core logic. Comprehensive tests for loader and quiz modes. Gap: Answer validation function (`check_answer`) lacks unit tests, making the substring bug undetectable by test suite alone.
+**Rating: 4/5** — 64 tests with 99% coverage. Comprehensive tests for loader and quiz modes. Gap identified: Answer validation function (`check_answer`) initially lacked unit tests, allowing a substring matching bug to pass undetected. This gap has been addressed by applying systematic code review using the AI Code Review Checklist, which caught the bug and led to a fix (removed overly-lenient substring matching).
 
 ### Documentation
 **Rating: 4/5** — Thorough AI edit log documents decision-making. README and design patterns guide are excellent. Final report now includes code review findings. Could be improved by documenting the discovered check_answer bug in a commit message or separate issue.
