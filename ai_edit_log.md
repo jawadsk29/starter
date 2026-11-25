@@ -31,6 +31,13 @@ Claude recommended:
 
 **Why:** This approach provides extensibility without coupling the CLI to specific mode implementations.
 
+### Checklist Review
+**Sections applied:** Correctness, Integration, Testability
+
+- **Correctness**: Architecture correctly implements State pattern for mode transitions. Factory pattern eliminates tight coupling between CLI and implementations. ✓
+- **Integration**: Interface is clean; CLI only knows about `QuizMode` and `QuizModeFactory`. ✓
+- **Testability**: Abstract base class with concrete implementations is easily testable. ✓
+
 ---
 
 ## Interaction 2: Flashcard Loader Implementation
@@ -70,6 +77,14 @@ Claude suggested:
 - Type validation
 - Error message clarity
 
+### Checklist Review
+**Sections applied:** Correctness, Input/Output, Error Handling, Testing
+
+- **Correctness**: Helper functions correctly extract and normalize both formats. Error handling logic is sound. ✓
+- **Input/Output**: Validates all required fields (front, back are strings). Rejects type mismatches. Clear error messages with indices. ✓
+- **Error Handling**: Custom `FlashcardLoadError` provides friendly messages without Python tracebacks. Edge cases (empty deck, unicode) handled. ✓
+- **Testing**: 25+ tests provide comprehensive coverage of both formats and error paths. ✓
+
 ---
 
 ## Interaction 3: Answer Checking with Lenient Matching
@@ -101,6 +116,19 @@ Claude recommended a multi-strategy approach:
 - Typos with 50%+ similarity are accepted ✓
 
 **Why:** Users appreciate flexibility, especially when their responses are close to correct answers.
+
+### Checklist Review
+**Sections applied:** Correctness, Input/Output, Logic bugs, Testing
+
+- **Correctness**: Multi-strategy approach is sound in concept. ✓
+- **Input/Output**: Accepts string inputs, returns boolean. Handles empty strings via strip(). ✓
+- **Logic bugs - Obvious errors**: ⚠️ **BUG FOUND**: Line 52 substring check is too lenient. Single-character answers incorrectly match.
+  - Example: User answers "2" for numeric deck. Correct answer is "2 + 2 = 4". The check `"2" in "2 + 2 = 4"` returns True, marking wrong answer as correct.
+  - Root cause: Substring matching doesn't validate that the substring is a complete answer, not just a component.
+  - Impact: Numeric and formula-based decks will have false positives.
+- **Testing**: Function lacks unit tests. The bug would have been caught by testing with single-digit answers against multi-part numeric answers. ⚠️
+
+**Recommendation**: Add minimum length threshold or word boundary validation for substring matches. Test with numeric decks specifically.
 
 ---
 
@@ -135,6 +163,14 @@ Claude suggested:
 - Retry phase transition
 - Edge case: all cards incorrect (no retry)
 - Statistics accumulation
+
+### Checklist Review
+**Sections applied:** Correctness, Logic, Edge cases, Testing
+
+- **Correctness**: State machine logic correctly implements adaptive algorithm. ✓
+- **Logic**: First pass ordering, incorrect tracking, retry phase transition all correct. Override of `record_answer()` prevents double-queueing. ✓
+- **Edge cases**: Handles all-incorrect scenario (no retry). Empty deck handled by base class. ✓
+- **Testing**: Comprehensive tests for state transitions and edge cases. 100% coverage of adaptive mode logic. ✓
 
 ---
 
@@ -178,6 +214,14 @@ Claude suggested:
 - Verified help text: `python main.py --help`
 - Tested error cases (missing file, invalid mode)
 - Verified graceful exits
+
+### Checklist Review
+**Sections applied:** Code Quality, Readability, Error Handling, Testability
+
+- **Code Quality**: Helper functions (`print_colored`, `print_header`) separate concerns well. ANSI color codes cleanly encapsulated. ✓
+- **Readability**: Variable names are clear. `run_quiz` function structure is logical. Colors class is self-documenting. ✓
+- **Error Handling**: Graceful Ctrl+C handling. File not found caught and reported. Invalid mode rejected by argparse. ✓
+- **Testability**: Manual testing performed for all modes, help text, and error cases. No unit tests added (CLI testing typically done through integration tests). ✓
 
 ---
 
