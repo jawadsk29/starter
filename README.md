@@ -12,9 +12,9 @@ A powerful command-line application for learning with flashcards. Load your stud
 ### Smart Answer Matching
 The app uses intelligent answer validation with multiple strategies:
 - Exact matching (case-insensitive)
-- Substring matching (accepts partial answers)
 - Word-based matching (all your words must be in the correct answer)
 - Fuzzy matching (accepts 50%+ similarity for typos)
+- Minimum 2-character length requirement prevents single-character false positives
 
 ### JSON Format Support
 Load flashcards from two flexible JSON formats:
@@ -193,7 +193,7 @@ The project includes 64 comprehensive tests covering:
 - Statistics tracking
 - Edge cases (empty decks, single card, etc.)
 
-**Current coverage: 100%** of core logic
+**Current coverage: 99%** of core logic
 
 ## Tips for Effective Learning
 
