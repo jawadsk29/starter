@@ -1,0 +1,22 @@
+{
+  "title": "Math Facts",
+  "description": "Basic math facts for quick review",
+  "cards": [
+    {
+      "front": "What is 7 × 8?",
+      "back": "56"
+    },
+    {
+      "front": "What is 144 ÷ 12?",
+      "back": "12"
+    },
+    {
+      "front": "What is the square root of 100?",
+      "back": "10"
+    },
+    {
+      "front": "What is 2³ (2 to the power of 3)?",
+      "back": "8"
+    }
+  ]
+}

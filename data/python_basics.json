@@ -1,0 +1,22 @@
+[
+  {
+    "front": "What is the syntax to create a list in Python?",
+    "back": "Using square brackets: my_list = [1, 2, 3]"
+  },
+  {
+    "front": "How do you check if a value is in a list?",
+    "back": "Using the 'in' operator: if 5 in my_list:"
+  },
+  {
+    "front": "What does len() return for a list?",
+    "back": "The number of elements in the list"
+  },
+  {
+    "front": "How do you add an element to a list?",
+    "back": "Using the append() method: my_list.append(4)"
+  },
+  {
+    "front": "What is a dictionary in Python?",
+    "back": "An unordered collection of key-value pairs: {'key': 'value'}"
+  }
+]
