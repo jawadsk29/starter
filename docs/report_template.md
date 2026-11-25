@@ -1,8 +1,8 @@
 # AI-Assisted Development Project Report
 
-**Student Name:** [Your Name]  
-**Project Title:** [Your Project Title]  
-**Date:** [Submission Date]
+**Student Name:** Jawad Kabir  
+**Project Title:** Flashcard Quizzer - AI-Assisted CLI Application  
+**Date:** November 25, 2026
 
 ## Executive Summary
 
